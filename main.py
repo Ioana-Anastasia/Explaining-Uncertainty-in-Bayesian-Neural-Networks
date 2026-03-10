@@ -14,18 +14,23 @@ if platform.system() == "Darwin":
     ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
     print("SSL Certificate fixed!")
 
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.1307,), (0.3081,))
+])
+
 train_data = datasets.MNIST(
     root="./data",
     train=True,
     download=True,
-    transform=ToTensor()
+    transform=transform
 )
 
 test_data = datasets.MNIST(
     root="./data",
     train=False,
     download=True,
-    transform=ToTensor()
+    transform=transform
 )
 
 labels_map = {
