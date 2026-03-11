@@ -5,23 +5,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 import platform
 
-def accuracy(model, data, device):
-    model.to(device)
-    model.eval()
-    correct = 0
-    total = 0
-
-    with torch.no_grad():
-        for inputs, labels in data:
-            inputs, labels = inputs.to(device), labels.to(device)
-            outputs = model(inputs)
-            _, predicted = torch.max(outputs, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-
-    return 100 * correct / total
-
-def monte_carlo_dropout(model, X, n_samples, train):
+def monte_carlo_dropout_with_voi(model, X, n_samples, train):
 
     if not train:
         model.train()
@@ -40,10 +24,9 @@ def monte_carlo_dropout(model, X, n_samples, train):
     predicted_entropy = -(mean_pred * torch.log(mean_pred + 1e-10)).sum(dim=1)
     expected_entropy = -(predictions * torch.log(predictions + 1e-10)).sum(dim=2).mean(dim=0)
 
-    epistemic = expected_entropy - predicted_entropy
-    aleatoric = expected_entropy
+    voi = expected_entropy - predicted_entropy
 
-    return mean_pred, epistemic, aleatoric
+    return voi, mean_pred
 
 
 def main():
@@ -105,15 +88,12 @@ def main():
     #     sample_img, label = mn.test_data[label]
     #     sample_img = sample_img.unsqueeze(0).to(device)
 
-            mean_pred, epistemic, aleatoric = monte_carlo_dropout(model, sample_img, 100, train)
+            voi, mean_pred = monte_carlo_dropout_with_voi(model, sample_img, 100, train)
             pred_class = mean_pred.argmax(dim=1).item()
 
             print("Predicted class:", pred_class)
             print("Real label:", label)
-            print("Epistemic uncertainty:", epistemic.item())
-            print("Aleatoric uncertainty:", aleatoric.item())
-
-            print(f"Accuracy: {accuracy(model, test_data, device):.2f}%")
+            print("Value of information:", voi.item())
 
             train = True
             checked_labels.add(label)
