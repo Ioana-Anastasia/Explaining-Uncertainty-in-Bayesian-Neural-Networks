@@ -1,0 +1,10 @@
+Predicted class: 7, Real label: 7, Epistemic uncertainty: -0.10956791043281555, Aleatoric uncertainty: 0.2115248143672943
+Predicted class: 2, Real label: 2, Epistemic uncertainty: -5.960464477539063e-08, Aleatoric uncertainty: 0.3589071035385132
+Predicted class: 1, Real label: 1, Epistemic uncertainty: 5.960464477539063e-08, Aleatoric uncertainty: 0.005464959889650345
+Predicted class: 0, Real label: 0, Epistemic uncertainty: 5.960464477539063e-08, Aleatoric uncertainty: 0.3105083107948303
+Predicted class: 4, Real label: 4, Epistemic uncertainty: 0.0, Aleatoric uncertainty: 0.10791240632534027
+Predicted class: 8, Real label: 9, Epistemic uncertainty: 1.1920928955078125e-07, Aleatoric uncertainty: 1.3106769323349
+Predicted class: 2, Real label: 5, Epistemic uncertainty: 5.960464477539063e-08, Aleatoric uncertainty: 0.7192907929420471
+Predicted class: 6, Real label: 6, Epistemic uncertainty: 5.960464477539063e-08, Aleatoric uncertainty: 0.9140660166740417
+Predicted class: 3, Real label: 3, Epistemic uncertainty: -5.960464477539063e-08, Aleatoric uncertainty: 0.8563440442085266
+Predicted class: 8, Real label: 8, Epistemic uncertainty: 6.146728992462158e-08, Aleatoric uncertainty: 0.021758785471320152

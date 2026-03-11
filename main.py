@@ -5,6 +5,20 @@ import matplotlib.pyplot as plt
 import ssl, certifi, platform
 import Monte_Carlo_Dropout as mcd
 import Value_of_Information as voi
+import os
+
+if not os.path.isfile("mcd_results.txt") and not os.path.isfile("voi_results.txt"):
+    mcd_results = open("mcd_results.txt", 'x')
+    voi_results = open("voi_results.txt", 'x')
+
+else:
+    with open("mcd_results.txt", "r+") as file_mcd:
+        file_mcd.seek(0)
+        file_mcd.truncate()
+
+    with open("voi_results.txt", "r+") as file_voi:
+        file_voi.seek(0)
+        file_voi.truncate()
 
 if platform.system() == "Darwin":
     print("Code running on MacOS. Fixing SSL Certificate.")
@@ -58,7 +72,7 @@ criterion = torch.nn.CrossEntropyLoss()
 
 print("\nTraining the model...\n")
 
-epochs = 1
+epochs = 15
 for epoch in range(epochs):
     model.train()
 
@@ -78,6 +92,7 @@ print("\n\nMONTE CARLO DROPOUT:\n\n")
 
 train = False
 checked_labels = set()
+file_mcd = open("mcd_results.txt", "a")
 
 for img, label in test_data:
     if label not in checked_labels:
@@ -91,6 +106,11 @@ for img, label in test_data:
         print("Epistemic uncertainty:", epistemic.item())
         print("Aleatoric uncertainty:", aleatoric.item())
 
+        file_mcd.write(f"Predicted class: {pred_class}, "
+                       f"Real label: {label}, "
+                       f"Epistemic uncertainty: {epistemic.item()}, "
+                       f"Aleatoric uncertainty: {aleatoric.item()}\n")
+
         print(f"Accuracy: {mcd.accuracy(model, test_data_loader, device):.2f}%")
 
         train = True
@@ -98,9 +118,12 @@ for img, label in test_data:
 
         print("\n-----------\n")
 
+file_mcd.close()
+
 print("\n\nVALUE OF INFORMATION:\n\n")
 
 checked_labels = set()
+file_voi = open("voi_results.txt", "a")
 
 for img, label in test_data:
     if label not in checked_labels:
@@ -113,6 +136,12 @@ for img, label in test_data:
         print("Real label:", label)
         print("Value of information:", voi_value.item())
 
+        file_voi.write(f"Predicted class: {pred_class}, "
+                       f"Real label: {label}, "
+                       f"Value of information:, {voi_value.item()}\n")
+
         checked_labels.add(label)
 
         print("\n-----------\n")
+
+file_voi.close()
