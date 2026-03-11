@@ -3,7 +3,8 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
 import ssl, certifi, platform
-import MCDropout as mcd
+import Monte_Carlo_Dropout as mcd
+import Value_of_Information as voi
 
 if platform.system() == "Darwin":
     print("Code running on MacOS. Fixing SSL Certificate.")
@@ -73,6 +74,8 @@ for epoch in range(epochs):
 print("\nModel training completed.\n")
 print("\nEvaluating the model...\n")
 
+print("\n\nMONTE CARLO DROPOUT:\n\n")
+
 train = False
 checked_labels = set()
 
@@ -91,6 +94,25 @@ for img, label in test_data:
         print(f"Accuracy: {mcd.accuracy(model, test_data_loader, device):.2f}%")
 
         train = True
+        checked_labels.add(label)
+
+        print("\n-----------\n")
+
+print("\n\nVALUE OF INFORMATION:\n\n")
+
+checked_labels = set()
+
+for img, label in test_data:
+    if label not in checked_labels:
+        sample_img = img.unsqueeze(0).to(device)
+
+        voi_value, mean_pred = voi.monte_carlo_dropout_with_voi(model, sample_img, 100, train)
+        pred_class = mean_pred.argmax(dim=1).item()
+
+        print("Predicted class:", pred_class)
+        print("Real label:", label)
+        print("Value of information:", voi_value.item())
+
         checked_labels.add(label)
 
         print("\n-----------\n")
