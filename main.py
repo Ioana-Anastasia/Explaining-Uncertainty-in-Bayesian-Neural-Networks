@@ -105,7 +105,7 @@ print("\n\nMONTE CARLO DROPOUT:\n\n")
 
 # evaluate the Monte Carlo Dropout model
 train = False # set to false initially
-checked_labels = set() #$ keep track of already printed labels so we can evaluate all
+checked_labels = set() # keep track of already printed labels so we can evaluate all
 file_mcd = open("mcd_results.txt", "a")
 
 for img, label in test_data:
